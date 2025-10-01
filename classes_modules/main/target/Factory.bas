@@ -17,6 +17,13 @@ Option Explicit
 
 ' Public API
 
+Public Function CreateListObjectEvents() As ListObjectEvents
+
+    Set CreateListObjectEvents = New ListObjectEvents
+    
+End Function
+
+
 Public Function CreatePropagatedFiltering() As PropagatedFiltering
 
     Set CreatePropagatedFiltering = New PropagatedFiltering
