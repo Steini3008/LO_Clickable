@@ -11,7 +11,7 @@ Option Explicit
 
 
 ' ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-' Class "AutoFilterWithValues" provides an implementation of "AutoFilterObject" based on if the actual value is one of the listed values
+' Class "AutoFilterWithValues" provides an implementation of "AutoFilterObject" based on if the actual value is contained within the listed values
 '
 ' Dependencies:
 ' (1) Global Libraries

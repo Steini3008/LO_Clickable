@@ -81,8 +81,9 @@ End Property
 
 ' Events
 
-Private Sub pListObjectEventHandler_CellWithinRelevantListobjectClicked(rngClicked As Range)
-    
+Private Sub pListObjectEventHandler_CellWithinRelevantListObjectClicked(rngClicked As Range)
+' Event "CellWithinRelevantListObjectClicked" sets the relevant listrow from the clicked cell "rngClicked" and triggers the filtering
+
     Set RowContext = LO_Range_Interaction.FindRowFromCell(rngClicked)
     
     FilterTarget
@@ -93,6 +94,8 @@ End Sub
 ' Public API
 
 Public Sub FilterTarget()
+' Filters "pTarget" based on the provided auto-filters within "pAutoFilterInteractor"
+' Uses the data from "pRowContext" over the mapping "pColumnMapping"
 
     Dim lcSource As ListColumn
     
@@ -139,6 +142,7 @@ Public Sub FilterTarget()
     
     Next lcSource
     
+    
     With pAutoFilterInteractor
         
         .Unfilter
@@ -148,18 +152,23 @@ Public Sub FilterTarget()
         .Focus
         
     End With
+    
+    
+    pTarget.Parent.Activate ' Set focus to filtered worksheet
 
 End Sub
 
 
 Public Sub ClearColumnMapping()
-    
+' Delegates to "pColumnMapping"
+
     pColumnMapping.ClearMappingColumns
     
 End Sub
 
 
 Public Function AddColumnMappings(colsSource As Variant, colsTarget As Variant) As Boolean
+' Delegates to "pColumnMapping"
 
     AddColumnMappings = pColumnMapping.AddMappingColumnPairs(colsSource, colsTarget)
     
@@ -167,6 +176,7 @@ End Function
 
 
 Public Function SetColumnMappings(colsSource As Variant, colsTarget As Variant) As Boolean
+' Delegates to "pColumnMapping"
 
     SetColumnMappings = pColumnMapping.SetMappingColumnPairs(colsSource, colsTarget)
     
@@ -174,7 +184,9 @@ End Function
 
 
 Public Sub AddAutoFilterWithValues(filterCol As Variant)
-    
+' Adds an "empty" auto-filter based on filter-values for column "filterCol"
+' Empty in this context means, that the filter-value will come from "pRowContext"
+
     Dim flterWithValues As New AutoFilterWithValues
     
     With flterWithValues
@@ -191,6 +203,8 @@ End Sub
 
 
 Public Sub AddAutoFilterWithComparison(filterCol As Variant, compType As ComparisonType)
+' Adds an "empty" auto-filter based on comparison for column "filterCol" with comparison-type "compType"
+' Empty in this context means, that the comparison-value will come from "pRowContext"
     
     Dim flterWithComparison As New AutoFilterWithComparison
     

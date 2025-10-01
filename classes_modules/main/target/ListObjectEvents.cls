@@ -12,7 +12,7 @@ Option Explicit
 
 ' ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ' Class "ListObjectEvents" defines an event "CellWithinRelevantListObjectClicked" and raises this event, if a cell was double-clicked within
-' a specific listobject.
+' a specific provided listobject.
 '
 ' Dependencies:
 ' (1) Global Libraries

@@ -11,7 +11,7 @@ Option Explicit
 
 
 ' ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-' Interface "AutoFilterObject" provides an API to apply an autofilter on one listcolumn on a listobject
+' Interface "AutoFilterObject" provides an API to apply an autofilter on one listcolumn of a listobject
 '
 ' Dependencies:
 ' (1) Global Libraries
