@@ -60,14 +60,6 @@ Public Sub Unfilter()
 End Sub
 
 
-Public Sub Focus()
-' Sets the focus to the worksheet containing "pListObject"
-
-    pListObject.Parent.Activate
-    
-End Sub
-
-
 Public Sub ClearAutoFilters()
     
     Set pAutoFilters = New Collection ' Of AutoFilterObject

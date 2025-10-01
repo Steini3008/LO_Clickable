@@ -149,8 +149,6 @@ Public Sub FilterTarget()
         
         .ApplyAutoFilters
         
-        .Focus
-        
     End With
     
     
