@@ -48,6 +48,13 @@ Public Property Set ListObject(nListObject As ListObject)
 End Property
 
 
+Public Property Get AutoFilters() As Collection ' Of AutoFilterObject
+
+    Set AutoFilters = pAutoFilters
+    
+End Property
+
+
 ' Public API
 
 Public Sub Unfilter()

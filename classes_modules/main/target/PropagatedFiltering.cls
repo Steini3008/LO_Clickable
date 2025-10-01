@@ -97,62 +97,11 @@ Public Sub FilterTarget()
 ' Filters "pTarget" based on the provided auto-filters within "pAutoFilterInteractor"
 ' Uses the data from "pRowContext" over the mapping "pColumnMapping"
 
-    Dim lcSource As ListColumn
+    updateValuesFromAutoFilters
     
-    Dim lcTarget As ListColumn
+    useAutoFilters
     
-    Dim flterTarget As AutoFilterObject
-    
-    
-    For Each lcSource In pColumnMapping.MappingColumnsA
-    
-        Set lcTarget = pColumnMapping.MappingColumnForA(lcSource)
-        
-        Set flterTarget = pAutoFilterInteractor.FindAutoFilter(lcTarget)
-        
-        If Not flterTarget Is Nothing Then
-            
-            If TypeOf flterTarget Is AutoFilterWithValues Then
-                
-                Dim flterTargetValues As AutoFilterWithValues
-                
-                Set flterTargetValues = flterTarget
-                
-                With flterTargetValues
-                    
-                    .SetFilterValues CStr(LO_Support.LO_Finder.FindValue(pRowContext, lcSource))
-                    
-                End With
-                
-            ElseIf TypeOf flterTarget Is AutoFilterWithComparison Then
-                
-                Dim flterTargetComparison As AutoFilterWithComparison
-                
-                Set flterTargetComparison = flterTarget
-                
-                With flterTargetComparison
-                    
-                    .ComparisonValue = LO_Support.LO_Finder.FindValue(pRowContext, lcSource)
-                    
-                End With
-                
-            End If
-            
-        End If
-    
-    Next lcSource
-    
-    
-    With pAutoFilterInteractor
-        
-        .Unfilter
-        
-        .ApplyAutoFilters
-        
-    End With
-    
-    
-    pTarget.Parent.Activate ' Set focus to filtered worksheet
+    focusOnFilteredWorksheet
 
 End Sub
 
@@ -222,6 +171,85 @@ End Sub
 
 
 ' Helpers
+
+Private Sub updateValuesFromAutoFilters()
+' Iterates over auto-filters within "pAutoFilterInteractor" and sets/updates values
+
+    Dim flterTarget As AutoFilterObject
+    
+    For Each flterTarget In pAutoFilterInteractor.AutoFilters
+        
+        updateValueFromAutoFilter flterTarget
+        
+    Next flterTarget
+    
+End Sub
+
+
+Private Sub updateValueFromAutoFilter(flter As AutoFilterObject)
+' For auto-filter "flter", it sets/updates its value with the content from the mapped column "lcSource" within "pRowContext"
+
+    Dim lcSource As ListColumn
+    
+    Set lcSource = pColumnMapping.MappingColumnForB(flter.FilterColumn)
+    
+    updateAutoFilterWithValue flter, LO_Support.LO_Finder.FindValue(pRowContext, lcSource)
+
+End Sub
+
+
+Private Sub updateAutoFilterWithValue(flter As AutoFilterObject, v As Variant)
+' For auto-filter "flter", it sets/updates its value with "v"
+
+    If TypeOf flter Is AutoFilterWithValues Then
+        
+        Dim flterWithValues As AutoFilterWithValues
+        
+        Set flterWithValues = flter
+        
+        With flterWithValues
+            
+            .SetFilterValues CStr(v)
+            
+        End With
+        
+    ElseIf TypeOf flter Is AutoFilterWithComparison Then
+        
+        Dim flterWithComparison As AutoFilterWithComparison
+        
+        Set flterWithComparison = flter
+        
+        With flterWithComparison
+            
+            .ComparisonValue = v
+            
+        End With
+        
+    End If
+
+End Sub
+
+
+Private Sub useAutoFilters()
+' Delegates to "pAutoFilterInteractor" by first clearing and then applying filters
+
+    With pAutoFilterInteractor
+        
+        .Unfilter
+        
+        .ApplyAutoFilters
+        
+    End With
+    
+End Sub
+
+
+Private Sub focusOnFilteredWorksheet()
+
+    pTarget.Parent.Activate
+    
+End Sub
+
 
 Private Sub setAllSourceListObjects(lo As ListObject)
 
