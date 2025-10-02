@@ -130,17 +130,59 @@ Public Function SetColumnMappings(colsSource As Variant, colsTarget As Variant) 
 End Function
 
 
-Public Sub AddAutoFilterWithValues(filterCol As Variant)
-' Adds an "empty" auto-filter based on filter-values for column "filterCol"
+Public Sub AddAutoFilterWithValue(filterCol As Variant)
+' Adds an "empty" auto-filter based on a filter-value for column "filterCol"
 ' Empty in this context means, that the filter-value will come from "pRowContext"
 
-    Dim flterWithValues As New AutoFilterWithValues
+    Dim flterWithValue As New AutoFilterWithValue
+    
+    With flterWithValue
+        
+        Set .ListObject = pTarget
+        
+        .FilterColumn = filterCol
+        
+    End With
+    
+    pAutoFilterInteractor.AddAutoFilter flter:=flterWithValue
+    
+End Sub
+
+
+Public Sub AddAutoFilterWithFixedValues(filterCol As Variant, ParamArray filterValues() As Variant)
+' Adds an "fully set-up" auto-filter based on filter-values for column "filterCol"
+' Fully set-up as "AutoFilterWithFixedValues" is not updateable
+
+    Dim flterWithValues As New AutoFilterWithFixedValues
     
     With flterWithValues
         
         Set .ListObject = pTarget
         
         .FilterColumn = filterCol
+        
+        .SetFilterValues filterValues
+        
+    End With
+    
+    pAutoFilterInteractor.AddAutoFilter flter:=flterWithValues
+    
+End Sub
+
+
+Public Sub AddAutoFilterWithDynamicValues(filterCol As Variant, ParamArray filterValues() As Variant)
+' Adds an "empty" auto-filter based on filter-values for column "filterCol"
+' Empty in this context means, that one additional filter-value will come from "pRowContext"
+
+    Dim flterWithValues As New AutoFilterWithDynamicValues
+    
+    With flterWithValues
+        
+        Set .ListObject = pTarget
+        
+        .FilterColumn = filterCol
+        
+        .SetFilterValues filterValues
         
     End With
     
@@ -201,29 +243,13 @@ End Sub
 Private Sub updateAutoFilterWithValue(flter As AutoFilterObject, v As Variant)
 ' For auto-filter "flter", it sets/updates its value with "v"
 
-    If TypeOf flter Is AutoFilterWithValues Then
+    If TypeOf flter Is UpdateableAutoFilter Then
         
-        Dim flterWithValues As AutoFilterWithValues
+        Dim updateableFilter As UpdateableAutoFilter
         
-        Set flterWithValues = flter
+        Set updateableFilter = flter
         
-        With flterWithValues
-            
-            .SetFilterValues CStr(v)
-            
-        End With
-        
-    ElseIf TypeOf flter Is AutoFilterWithComparison Then
-        
-        Dim flterWithComparison As AutoFilterWithComparison
-        
-        Set flterWithComparison = flter
-        
-        With flterWithComparison
-            
-            .ComparisonValue = v
-            
-        End With
+        updateableFilter.UpdateValue v
         
     End If
 

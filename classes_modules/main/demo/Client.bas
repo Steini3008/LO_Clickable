@@ -30,7 +30,9 @@ Public Sub Main_PropagatedFiltering()
         
         .AddAutoFilterWithComparison "Land", ComparisonType.Equals
         
-        .AddAutoFilterWithValues "Alter"
+        .AddAutoFilterWithFixedValues "Geschlecht", "m", "w"
+        
+        .AddAutoFilterWithDynamicValues "Alter", "62"
         
     End With
     

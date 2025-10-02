@@ -34,3 +34,9 @@ GUID:
 Major: 0
 Minor: 0
 
+Name: Collection_Support
+Full Path: \\apexgroup.cloud\dfs\Apex_Subsidiary_Offices\Reports\Data Management\VBA\VBA_Services\Collection_Support\bin\Collection_Support.xlam
+GUID: 
+Major: 0
+Minor: 0
+

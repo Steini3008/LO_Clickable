@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "AutoFilterObject"
+Attribute VB_Name = "UpdateableAutoFilter"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -11,7 +11,7 @@ Option Explicit
 
 
 ' ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-' Interface "AutoFilterObject" provides an API to apply an autofilter on one listcolumn of a listobject
+' Interface "UpdateableAutoFilter" provides an API to simply update a value (preferably for a "AutoFilterObject"-implementation)
 '
 ' Dependencies:
 ' (1) Global Libraries
@@ -23,25 +23,8 @@ Option Explicit
 ' ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-' Getters and Setters
-
-Public Property Set ListObject(nListObject As ListObject)
-
-End Property
-
-
-Public Property Get FilterColumn() As ListColumn
-
-End Property
-
-
-Public Property Let FilterColumn(nFilterColumn As Variant)
-
-End Property
-
-
 ' Public API
 
-Public Sub ApplyFilter()
+Public Sub UpdateValue(v As Variant)
 
 End Sub

@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "AutoFilterWithComparison"
+Attribute VB_Name = "AutoFilterWithDynamicValues"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -11,15 +11,15 @@ Option Explicit
 
 
 ' ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-' Class "AutoFilterWithComparison" provides an implementation of "AutoFilterObject" based on a comparison (e.g. Equals, GreaterThan, ...) to a value
-' Also implements "UpdateableAutoFilter"
+' Class "AutoFilterWithDynamicValues" provides an implementation of "AutoFilterObject" based on "AutoFilterWithFixedValues"
+' As it implements "UpdateableAutoFilter", the value of the current row-context will be added to the "pFilterValues"
 '
 ' Dependencies:
 ' (1) Global Libraries
 '   None
 '
 ' (2) Private Libraries
-'   None
+'   "Collection_Support"
 '
 ' ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -36,18 +36,18 @@ Private pListObject As ListObject
 
 Private pFilterColumn As ListColumn
 
-Private pComparisonTypeMapping As Scripting.Dictionary ' Key: ComparisonType, Value: String
+Private pFilterValues As Collection
 
-Private pComparisonType As String
-
-Private pComparisonValue As String
+Private pFilterValuesBase As Collection
 
 
 ' Constructor
 
 Private Sub Class_Initialize()
     
-    setupComparisonTypeMapping
+    Set pFilterValues = New Collection
+    
+    Set pFilterValuesBase = New Collection
     
 End Sub
 
@@ -75,20 +75,6 @@ Public Property Let FilterColumn(nFilterColumn As Variant)
 End Property
 
 
-Public Property Let Comparison(nComparison As ComparisonType)
-    
-    pComparisonType = pComparisonTypeMapping.Item(nComparison)
-    
-End Property
-
-
-Public Property Let ComparisonValue(nComparisonValue As Variant)
-
-    pComparisonValue = CStr(nComparisonValue)
-    
-End Property
-
-
 Private Property Set AutoFilterObject_ListObject(nListObject As ListObject)
     
     Set ListObject = nListObject
@@ -112,10 +98,25 @@ End Property
 
 ' Public API
 
+Public Sub SetFilterValues(ParamArray paFilterValues() As Variant)
+' "paFilterValues" need to be from type String, as other types (e.g. Integer/Long) produce issues
+    
+    Set pFilterValuesBase = Collection_Support.Collection_Creator.Flattened(paFilterValues)
+    
+End Sub
+
+
+Public Sub AppendFilterValues(ParamArray paFilterValues() As Variant)
+    
+    Collection_Support.Collection_Manipulator.AppendFlattened pFilterValuesBase, Collection_Support.Collection_Creator.Flattened(paFilterValues)
+    
+End Sub
+
+
 Public Sub ApplyFilter()
     
     With pListObject
-        .Range.AutoFilter Field:=pFilterColumn.Index, Criteria1:=pComparisonType & pComparisonValue
+        .Range.AutoFilter Field:=pFilterColumn.Index, Operator:=xlFilterValues, Criteria1:=Array_Support.FromCollection(pFilterValues)
     End With
     
 End Sub
@@ -123,7 +124,9 @@ End Sub
 
 Public Sub UpdateValue(v As Variant)
     
-    ComparisonValue = v
+    Set pFilterValues = Collection_Support.Collection_Creator.IndependentCopy(pFilterValuesBase)
+    
+    pFilterValues.Add Item:=CStr(v)
     
 End Sub
 
@@ -144,17 +147,3 @@ End Sub
 
 ' Helpers
 
-Private Sub setupComparisonTypeMapping()
-
-    Set pComparisonTypeMapping = New Scripting.Dictionary ' Key: ComparisonType, Value: String
-    
-    With pComparisonTypeMapping
-        .Add Key:=ComparisonType.Equals, Item:="="
-        .Add Key:=ComparisonType.NotEquals, Item:="<>"
-        .Add Key:=ComparisonType.GreaterThan, Item:=">"
-        .Add Key:=ComparisonType.GreaterThanOrEqualTo, Item:=">="
-        .Add Key:=ComparisonType.LessThan, Item:="<"
-        .Add Key:=ComparisonType.LessThanOrEqualTo, Item:="<="
-    End With
-    
-End Sub
