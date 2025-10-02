@@ -130,8 +130,18 @@ Public Function SetColumnMappings(colsSource As Variant, colsTarget As Variant) 
 End Function
 
 
+Public Sub AddAutoFilter(flter As AutoFilterObject)
+' Adds "flter" to "pAutoFilterInteractor"
+' If you define and inject an auto-filter on your own, make sure that it is defined on listobject "pTarget"
+' as it otherwise throws an error
+
+    pAutoFilterInteractor.AddAutoFilter flter
+    
+End Sub
+
+
 Public Sub AddAutoFilterWithValue(filterCol As Variant)
-' Adds an "empty" auto-filter based on a filter-value for column "filterCol"
+' Adds an "empty" auto-filter to "pAutoFilterInteractor" based on a filter-value for column "filterCol"
 ' Empty in this context means, that the filter-value will come from "pRowContext"
 
     Dim flterWithValue As New AutoFilterWithValue
@@ -144,13 +154,13 @@ Public Sub AddAutoFilterWithValue(filterCol As Variant)
         
     End With
     
-    pAutoFilterInteractor.AddAutoFilter flter:=flterWithValue
+    AddAutoFilter flterWithValue
     
 End Sub
 
 
 Public Sub AddAutoFilterWithFixedValues(filterCol As Variant, ParamArray filterValues() As Variant)
-' Adds an "fully set-up" auto-filter based on filter-values for column "filterCol"
+' Adds an "fully set-up" auto-filter to "pAutoFilterInteractor" based on filter-values for column "filterCol"
 ' Fully set-up as "AutoFilterWithFixedValues" is not updateable
 
     Dim flterWithValues As New AutoFilterWithFixedValues
@@ -165,13 +175,13 @@ Public Sub AddAutoFilterWithFixedValues(filterCol As Variant, ParamArray filterV
         
     End With
     
-    pAutoFilterInteractor.AddAutoFilter flter:=flterWithValues
+    AddAutoFilter flterWithValues
     
 End Sub
 
 
 Public Sub AddAutoFilterWithDynamicValues(filterCol As Variant, ParamArray filterValues() As Variant)
-' Adds an "empty" auto-filter based on filter-values for column "filterCol"
+' Adds an "empty" auto-filter to "pAutoFilterInteractor" based on filter-values for column "filterCol"
 ' Empty in this context means, that one additional filter-value will come from "pRowContext"
 
     Dim flterWithValues As New AutoFilterWithDynamicValues
@@ -186,13 +196,13 @@ Public Sub AddAutoFilterWithDynamicValues(filterCol As Variant, ParamArray filte
         
     End With
     
-    pAutoFilterInteractor.AddAutoFilter flter:=flterWithValues
+    AddAutoFilter flterWithValues
     
 End Sub
 
 
 Public Sub AddAutoFilterWithComparison(filterCol As Variant, compType As ComparisonType)
-' Adds an "empty" auto-filter based on comparison for column "filterCol" with comparison-type "compType"
+' Adds an "empty" auto-filter to "pAutoFilterInteractor" based on comparison for column "filterCol" with comparison-type "compType"
 ' Empty in this context means, that the comparison-value will come from "pRowContext"
     
     Dim flterWithComparison As New AutoFilterWithComparison
@@ -207,7 +217,7 @@ Public Sub AddAutoFilterWithComparison(filterCol As Variant, compType As Compari
         
     End With
     
-    pAutoFilterInteractor.AddAutoFilter flter:=flterWithComparison
+    AddAutoFilter flterWithComparison
     
 End Sub
 
